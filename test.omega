@@ -1,0 +1,8 @@
+
+; create a constant:
+@CONSTANT nine 9
+; another constant:
+@CONSTANT diging 7.0 ; more comments............
+
+int var : nine; even more cooments
+; var should become 9
