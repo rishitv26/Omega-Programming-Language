@@ -28,3 +28,8 @@ void _call_compiler_error(const string line, unsigned int type, vector<string>& 
 
 	exit(1);
 }
+void _call_abort(unsigned int line, const char* file)
+{
+	cout << "Abort Called on " << line << " in " << file << endl;
+	exit(1);
+}

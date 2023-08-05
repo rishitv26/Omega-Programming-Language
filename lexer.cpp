@@ -26,7 +26,7 @@ static int find(string str, char c)
     return -1;
 }
 
-string vect_to_str(vector<string> vect, char c) { // make all functions use sym->NEW_LINE instead of '\n'
+string vect_to_str(vector<string> vect, char c) {
     string out;
 
     for (const string& i : vect) {

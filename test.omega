@@ -2,8 +2,8 @@
 
 ; create a constant:
 
-@CONSTANT nine 9
-@CONSTANT seven_float 7.0 ; this should give an error during compilation...
+@CONST nine 9
+@CONST seven_float 7.0 ; this should give an error during compilation...
 
 
 int var : nine; even more cooments

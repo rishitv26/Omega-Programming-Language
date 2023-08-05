@@ -8,13 +8,14 @@
 #include <map>
 #include <sstream>
 #include <vector>
+#include <variant>
 using namespace std;
 
 // dont worry about adding dependencies header in these header files...
 
-#include "symbols.h" 
-#include "lexer.h"
 #include "errors.h"
+#include "symbols.h" 
 #include "tokens.h"
+#include "lexer.h"
 
 #endif

@@ -9,14 +9,15 @@ typedef const string& LOGIC;
 // all struct symbols in here...
 struct Symbols {
 	// reserved names:
-	TYPE_LATERAL INT = "int";
-	TYPE_LATERAL STRING = "string";
-	TYPE_LATERAL BOOL = "bool";
-	TYPE_LATERAL POINT = "point";
-	TYPE_LATERAL FLOAT = "float";
-	TYPE_LATERAL LIST = "list";
-	TYPE_LATERAL DICT = "dict";
-	TYPE_LATERAL CONSTANT = "@CONSTANT";
+	TYPE_LATERAL INT = "int ";
+	TYPE_LATERAL STRING = "string ";
+	TYPE_LATERAL BOOL = "bool ";
+	TYPE_LATERAL POINT = "point ";
+	TYPE_LATERAL FLOAT = "float ";
+	TYPE_LATERAL LIST = "list ";
+	TYPE_LATERAL DICT = "dict ";
+	TYPE_LATERAL ARRAY = "array ";
+	TYPE_LATERAL CONSTANT = "@CONST ";
 
 	// operators:
 	// arithmetic:
@@ -60,5 +61,61 @@ struct Symbols {
 	
 };
 
+template <typename T, size_t S>
+class Array { // array implementation into a class...
+private:
+	T c_array[S];
+public:
+	Array() {};
+	~Array() { delete[] c_array; };
+	constexpr size_t size() const { return S; };
+
+	T& operator [](size_t n) {
+		if (n + 1 > S) _call_abort(__LINE__, __FILE__);
+		return c_array[n];
+	};
+
+	constexpr T* return_location() const { return c_array; }
+};
+
+template <typename F, typename S>
+class Dictionary { // Dictonary implementation comeplete
+private:
+	map<F, S> cpp_dict;
+public:
+	Dictionary() {}
+	~Dictionary() { delete cpp_dict; }
+	size_t size() { return cpp_dict.size(); }
+
+	S& get(F key) {
+		return cpp_dict[key];
+	};
+};
+
+class Pointer { // implementation of a general pointer...
+private:
+	variant<int, string, bool, float> c_ptr;
+public:
+	Pointer();
+	~Pointer();
+	void* raw_ptr();
+
+	template <typename T>
+	void point_to(T* obj) { c_ptr = (void*)obj; }
+
+	template <typename T>
+	T* cast_ptr() { return (T*)c_ptr; }
+};
+
+/*
+class List {
+private:
+	vector<variant<>>
+
+public:
+	List();
+	~List();
+};
+*/
 
 #endif
