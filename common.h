@@ -12,7 +12,9 @@ using namespace std;
 
 // dont worry about adding dependencies header in these header files...
 
-#include "Symbols.h" 
+#include "symbols.h" 
 #include "lexer.h"
+#include "errors.h"
+#include "tokens.h"
 
 #endif
