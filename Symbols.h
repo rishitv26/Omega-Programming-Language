@@ -92,7 +92,7 @@ public:
 	};
 };
 
-class Pointer { // implementation of a general pointer...
+class Pointer { // TODO....
 private:
 	variant<int, string, bool, float> c_ptr;
 public:
