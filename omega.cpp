@@ -2,6 +2,7 @@
 
 // commandline compiler ->
 int main() {
+    /*
     const string file_name = "test.omega";
 
     // collect code from file:
@@ -39,6 +40,10 @@ int main() {
     cout << code << endl;
 
     // preproccessor and simplification complete: start tokenising code ->
+    */
+
+    List list;
+    list.append<int>(10);
 
     // compilation complete
     return 0;

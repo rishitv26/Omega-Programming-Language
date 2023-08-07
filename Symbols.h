@@ -67,7 +67,7 @@ private:
 	T c_array[S];
 public:
 	Array() {};
-	~Array() { delete[] c_array; };
+	~Array() {};
 	constexpr size_t size() const { return S; };
 
 	T& operator [](size_t n) {
@@ -84,37 +84,46 @@ private:
 	map<F, S> cpp_dict;
 public:
 	Dictionary() {}
-	~Dictionary() { delete cpp_dict; }
+	~Dictionary() {}
 	size_t size() { return cpp_dict.size(); }
 
 	S& get(F key) {
+		if (!cpp_dict.count(key)) _call_abort(__LINE__, __FILE__);
 		return cpp_dict[key];
 	};
 };
 
+template <typename T>
 class Pointer { // TODO....
 private:
-	variant<int, string, bool, float> c_ptr;
+	T* c_ptr;
 public:
-	Pointer();
-	~Pointer();
-	void* raw_ptr();
+	Pointer() :c_ptr(nullptr) {}
+	~Pointer() {}
+	T* raw_ptr() { return c_ptr; }
 
-	template <typename T>
-	void point_to(T* obj) { c_ptr = (void*)obj; }
+	void point_to(T* obj) { c_ptr = obj; }
 
-	template <typename T>
-	T* cast_ptr() { return (T*)c_ptr; }
+	T ptr_val() { return *c_ptr; }
 };
 
-/*
-class List {
+/* 
+static class LinkedItem { // TODO
 private:
-	vector<variant<>>
-
 public:
-	List();
-	~List();
+	LinkedItem* child;
+	variant<int, string, bool, float, Pointer<int>, Pointer<string>, Pointer<bool>, Pointer<float>>
+
+	LinkedItem();
+	~LinkedItem();
+
+};
+
+class LinkedList {
+private:
+	vector<LinkedItem*> items;
+public:
+
 };
 */
 
