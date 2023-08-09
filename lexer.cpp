@@ -1,16 +1,19 @@
 #include "common.h"
 
-vector<string> split_by(string str, struct Symbols* sym, char by, bool simplify)
+vector<string> split_by(string str, struct Symbols* sym, char by, bool simplify, bool count_cont_line)
 {
     vector<string> out;
     out.push_back(""); // initial item
+    bool remove_next_nl = false;
 
-    for (char i : str) {
-        if (i == by) out.push_back("");
-        else out.back() += i;
+    for (int i = 0; i < str.size(); ++i) {
+        if (count_cont_line && str[i] == sym->CONTINUE_LINE) { remove_next_nl = true; continue; }
+        else if (str[i] == '\n' && remove_next_nl) { remove_next_nl = false; continue; }
+        else if (str[i] == by) out.push_back("");
+        else out.back() += str[i];
     }
 
-    if (simplify) { // simfify for certain senarios:
+    if (simplify) { // simplify for certain senarios:
         int counter = 0;
         while (!LEXER_SIMPLIFIED(&out, sym)) LEXER_SIMPLIFY(&out, &counter, sym);
     }
@@ -108,12 +111,25 @@ void LEXER_FILL_CONST_TABLE(vector<int>* indexs, vector<string>* lines, map <str
     for (int i : *indexs) {
         vector<string> l = split_by((*lines)[i], sym, ' ', true);
         if (l.size() != 3) _call_compiler_error((*lines)[i], CONSTANT_DECLARATION_FORMAT, *original, file);
-        // search for already used things:
+        // search for already used definitions:
         for (const auto& j : *constants) {
             if (j.first == l[1]) 
                _call_compiler_error((*lines)[i], CONSTANT_MULTIPLE_DEFINITIONS, *original, file);
         }
         (*constants)[l[1]] = l[2];
+    }
+
+    // check for mirrors (when one const name contain's another const's name):
+    for (auto elem : *constants) {
+        for (auto i : *constants) {
+            if (i.first.find(elem.first) != 18446744073709551615 &&
+                i.first != elem.first
+            ) _call_abort(__LINE__, __FILE__, 
+                "\nOccured due to mirroring constants "
+                "(when one constant include the name of the other). "
+                "Error happend with constants: { " + i.first + " (" + i.second + ")" ", "
+                + elem.first + " (" + elem.second + ")" "}");
+        }
     }
 }
 
@@ -121,12 +137,13 @@ void LEXER_REPLACE_CONSTANTS(map<string, string>* constants, vector<string>* lin
 {
     for (int i = 0; i < lines->size(); ++i) {
         for (const auto& constant : *constants) {
-            while ((*lines)[i].find(constant.first) != 18446744073709551615) { // while its present
-                if (constant.first.size() >= constant.second.size())
-                    (*lines)[i].replace((*lines)[i].find(constant.first), constant.first.size(), constant.second);
+            const string f = '@' + constant.first;
+            while ((*lines)[i].find(f) != 18446744073709551615) { // while its present
+                if (f.size() >= constant.second.size())
+                    (*lines)[i].replace((*lines)[i].find(f), f.size(), constant.second);
                 
-                else if (constant.first.size() < constant.second.size())
-                    (*lines)[i].replace((*lines)[i].find(constant.first), constant.second.size(), constant.second);
+                else if (f.size() < constant.second.size())
+                    (*lines)[i].replace((*lines)[i].find(f), constant.second.size(), constant.second);
             }
         }
     }

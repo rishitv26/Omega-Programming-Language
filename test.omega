@@ -3,8 +3,12 @@
 ; create a constant:
 
 @CONST nine 9
-@CONST seven_float 7.0 ; this should give an error during compilation...
+@CONST seven_double 7.0
 
+int var : \
+		  \
+		  9@nine; should become 99
 
-int var : nine; even more cooments
+int var2 : \
+		@nine7; should become 97
 

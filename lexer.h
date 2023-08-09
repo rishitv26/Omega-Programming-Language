@@ -2,8 +2,7 @@
 #define LEXER_H
 
 // helper functions:
-
-vector <string> split_by(string str, struct Symbols* sym, char by = ' ', bool simplify = false);
+vector <string> split_by(string str, struct Symbols* sym, char by = ' ', bool simplify = false, bool count_cont_line = false);
 string vect_to_str(vector<string> vect, char c);
 
 // add a LEXER SIMPLIFY BOOLEAN to help simplify code

@@ -5,19 +5,20 @@ typedef const unsigned char RAW_SYMBOL;
 typedef const string& TYPE_LATERAL;
 typedef const string& COMPARISION;
 typedef const string& LOGIC;
+typedef const string& RESERVED;
 
 // all struct symbols in here...
 struct Symbols {
 	// reserved names:
-	TYPE_LATERAL INT = "int ";
-	TYPE_LATERAL STRING = "string ";
-	TYPE_LATERAL BOOL = "bool ";
-	TYPE_LATERAL POINT = "point ";
-	TYPE_LATERAL FLOAT = "float ";
-	TYPE_LATERAL LIST = "list ";
-	TYPE_LATERAL DICT = "dict ";
-	TYPE_LATERAL ARRAY = "array ";
-	TYPE_LATERAL CONSTANT = "@CONST ";
+	TYPE_LATERAL INT = "int";
+	TYPE_LATERAL STRING = "string";
+	TYPE_LATERAL BOOL = "bool";
+	TYPE_LATERAL POINT = "point";
+	TYPE_LATERAL DOUBLE = "double";
+	TYPE_LATERAL LIST = "list";
+	TYPE_LATERAL DICT = "dict";
+	TYPE_LATERAL ARRAY = "array";
+	TYPE_LATERAL CONSTANT = "@CONST "; // space at the end is important here...
 
 	// operators:
 	// arithmetic:
@@ -26,6 +27,7 @@ struct Symbols {
 	RAW_SYMBOL MINUS = '-'; // 45
 	RAW_SYMBOL TIMES = '*'; // 42
 	RAW_SYMBOL DIVIDE = '/'; // 47
+	RAW_SYMBOL RAISETO = '^'; // 
 	// assignment:
 	RAW_SYMBOL ASSIGN = ':'; // 58
 
@@ -38,6 +40,7 @@ struct Symbols {
 	RAW_SYMBOL DOT = '.'; // 46
 	RAW_SYMBOL COMMA = ','; // 44
 	RAW_SYMBOL COMMENT = ';'; // 59
+	RAW_SYMBOL CONTINUE_LINE = '\\'; // 92
 
 	// comparision:
 	COMPARISION IS_EQUAL = "==";
@@ -58,73 +61,11 @@ struct Symbols {
 	LOGIC AND = "&&";
 	LOGIC OR = "||";
 	LOGIC NOT = "!";
-	
+	RESERVED WHILE = "while";
+	RESERVED IF = "if";
+	RESERVED RETURN = "return";
+	RESERVED FOR = "for";
+	RESERVED EXIT = "__exit";
 };
-
-template <typename T, size_t S>
-class Array { // array implementation into a class...
-private:
-	T c_array[S];
-public:
-	Array() {};
-	~Array() {};
-	constexpr size_t size() const { return S; };
-
-	T& operator [](size_t n) {
-		if (n + 1 > S) _call_abort(__LINE__, __FILE__);
-		return c_array[n];
-	};
-
-	constexpr T* return_location() const { return c_array; }
-};
-
-template <typename F, typename S>
-class Dictionary { // Dictonary implementation comeplete
-private:
-	map<F, S> cpp_dict;
-public:
-	Dictionary() {}
-	~Dictionary() {}
-	size_t size() { return cpp_dict.size(); }
-
-	S& get(F key) {
-		if (!cpp_dict.count(key)) _call_abort(__LINE__, __FILE__);
-		return cpp_dict[key];
-	};
-};
-
-template <typename T>
-class Pointer { // TODO....
-private:
-	T* c_ptr;
-public:
-	Pointer() :c_ptr(nullptr) {}
-	~Pointer() {}
-	T* raw_ptr() { return c_ptr; }
-
-	void point_to(T* obj) { c_ptr = obj; }
-
-	T ptr_val() { return *c_ptr; }
-};
-
-/* 
-static class LinkedItem { // TODO
-private:
-public:
-	LinkedItem* child;
-	variant<int, string, bool, float, Pointer<int>, Pointer<string>, Pointer<bool>, Pointer<float>>
-
-	LinkedItem();
-	~LinkedItem();
-
-};
-
-class LinkedList {
-private:
-	vector<LinkedItem*> items;
-public:
-
-};
-*/
 
 #endif
