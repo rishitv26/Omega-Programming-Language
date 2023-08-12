@@ -11,36 +11,34 @@ enum class ValidTokens {
 	OTHERS = 4,
 };
 
-struct StartOfScent {
-	bool is_start = true;
-};
-
-struct EndOfScent {
-	bool is_end = true;
-};
-
 struct Identifier {
 	string name;
-	TYPE_LATERAL type;
+	Identifier(string n) :name(n) {};
 };
 
 struct Keyword {
-	TYPE_LATERAL name;
+	string name;
+	Keyword(TYPE_LATERAL type) :name(type) {};
 };
 
 struct Literal {
-	variant<int, string, double> value;
+	string name;
 };
 
 struct Operation {
-	RAW_SYMBOL op1 = NULL;
-	LOGIC op2 = "";
-	COMPARISION op3 = "";
+	unsigned char op1 = NULL;
+	string op2 = "";
 	const string get_symbol();
 };
 
 struct Others {
-	const string val;
+	char name; 
+	Others(RAW_SYMBOL sym) :name(sym) {};
+};
+
+struct EndLine {
+	char c;
+	EndLine(RAW_SYMBOL sym) { c = sym; }
 };
 
 // fundamental type for every token:
@@ -50,16 +48,20 @@ typedef struct _TOKEN_TYPE {
 	void* ptr_to_next_ins = nullptr;
 
 	void set(void* I, ValidTokens t);
+	~_TOKEN_TYPE();
 } CToken;
 
 // start tokenizing code:
-
 class ProgramTokens {
 private:
 	vector<CToken> Tokens;
+	ValidTokens findTokenType(string str, struct Symbols *sym);
+
 public:
 	ProgramTokens(vector<string>& lines, struct Symbols* sym);
 	~ProgramTokens();
+
+	vector<CToken>& return_tokens();
 };
 
 #endif

@@ -15,9 +15,10 @@ struct Symbols {
 	TYPE_LATERAL BOOL = "bool";
 	TYPE_LATERAL POINT = "point";
 	TYPE_LATERAL DOUBLE = "double";
-	TYPE_LATERAL LIST = "list";
-	TYPE_LATERAL DICT = "dict";
-	TYPE_LATERAL ARRAY = "array";
+	TYPE_LATERAL LIST = "list"; // list is always [a, b, c, d]
+	TYPE_LATERAL DICT = "dict"; // always {{a, b}, {c, d}}
+	TYPE_LATERAL ARRAY = "array"; // always <a, b, c, d>
+	TYPE_LATERAL CLASS = "class"; // list, dict, and arrays are builtin classes.
 	TYPE_LATERAL CONSTANT = "@CONST "; // space at the end is important here...
 
 	// operators:
@@ -27,7 +28,7 @@ struct Symbols {
 	RAW_SYMBOL MINUS = '-'; // 45
 	RAW_SYMBOL TIMES = '*'; // 42
 	RAW_SYMBOL DIVIDE = '/'; // 47
-	RAW_SYMBOL RAISETO = '^'; // 
+	RAW_SYMBOL RAISETO = '^'; // 94
 	// assignment:
 	RAW_SYMBOL ASSIGN = ':'; // 58
 
@@ -41,6 +42,7 @@ struct Symbols {
 	RAW_SYMBOL COMMA = ','; // 44
 	RAW_SYMBOL COMMENT = ';'; // 59
 	RAW_SYMBOL CONTINUE_LINE = '\\'; // 92
+	RAW_SYMBOL STRING_DEF = '\''; // 39
 
 	// comparision:
 	COMPARISION IS_EQUAL = "==";
@@ -61,11 +63,15 @@ struct Symbols {
 	LOGIC AND = "&&";
 	LOGIC OR = "||";
 	LOGIC NOT = "!";
+
+	// reserved names:
 	RESERVED WHILE = "while";
 	RESERVED IF = "if";
 	RESERVED RETURN = "return";
 	RESERVED FOR = "for";
 	RESERVED EXIT = "__exit";
+	RESERVED TRUE = "true";
+	RESERVED FALSE = "false";
 };
 
 // function to match givin symbol:

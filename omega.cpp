@@ -18,10 +18,8 @@ int main() {
     cout << code << endl;
     cout << "END OF RAW CODE --------------------------" << endl;
 
-    // load symbol tables into a struct
-
     struct Symbols symbols;
-    
+
     // start by removing comments and blank lines:
 
     vector<string> lines = split_by(code, &symbols, symbols.END_LINE);
@@ -30,7 +28,7 @@ int main() {
     lines.push_back(symbols.EXIT);
     while (!LEXER_SIMPLIFIED(&lines, &symbols)) LEXER_SIMPLIFY(&lines, &counter, &symbols);
     code = vect_to_str(lines, symbols.END_LINE);
-        
+
     // then, replace all constants with thier laterals
 
     map <string, string> constants;
@@ -51,9 +49,30 @@ int main() {
     cout << code << endl;
 
     // preproccessor and simplification complete: start tokenising code ->
-    ProgramTokens tokens(lines, &symbols); // tokenises code:
+    ProgramTokens tokens(lines, &symbols); // <- tokenises code
 
-
+    for (CToken i : tokens.return_tokens()) {
+        if (i.token_t == ValidTokens::IDENTIFIER) {
+            struct Identifier id = *((struct Identifier*)i.token_ptr);
+            cout << id.name << ' ' << "->" << endl;
+        }
+        else if (i.token_t == ValidTokens::KEYWORD) {
+            struct Keyword id = *((struct Keyword*)i.token_ptr);
+            cout << id.name << ' ' << "->" << endl;
+        }
+        else if (i.token_t == ValidTokens::LITERAL) {
+            struct Literal id = *((struct Literal*)i.token_ptr);
+            cout << id.name << ' ' << "->" << endl;
+        }
+        else if (i.token_t == ValidTokens::OPERATION) {
+            struct Operation id = *((struct Operation*)i.token_ptr);
+            cout << id.get_symbol() << ' ' << "->" << endl;
+        }
+        else {
+            struct Others id = *((struct Others*)i.token_ptr);
+            cout << id.name << ' ' << "->" << endl;
+        }
+    }
 
     // compilation complete
     return 0;

@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="test.omega" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="omega.cpp">
@@ -58,5 +59,8 @@
     <ResourceCompile Include="OmegaProgrammingLanguage.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="LICENSE.txt" />
   </ItemGroup>
 </Project>
