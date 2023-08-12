@@ -51,8 +51,10 @@ int main() {
     cout << code << endl;
 
     // preproccessor and simplification complete: start tokenising code ->
-    
-    // compilation complete
+    ProgramTokens tokens(lines, &symbols); // tokenises code:
 
+
+
+    // compilation complete
     return 0;
 }

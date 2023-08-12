@@ -68,4 +68,7 @@ struct Symbols {
 	RESERVED EXIT = "__exit";
 };
 
+// function to match givin symbol:
+vector<string>& possibleMatchs(string in, struct Symbols* sym);
+
 #endif

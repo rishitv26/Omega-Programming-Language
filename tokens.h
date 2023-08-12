@@ -11,6 +11,14 @@ enum class ValidTokens {
 	OTHERS = 4,
 };
 
+struct StartOfScent {
+	bool is_start = true;
+};
+
+struct EndOfScent {
+	bool is_end = true;
+};
+
 struct Identifier {
 	string name;
 	TYPE_LATERAL type;
@@ -39,17 +47,19 @@ struct Others {
 typedef struct _TOKEN_TYPE {
 	ValidTokens token_t;
 	void* token_ptr = nullptr;
+	void* ptr_to_next_ins = nullptr;
 
 	void set(void* I, ValidTokens t);
-
 } CToken;
 
 // start tokenizing code:
 
 class ProgramTokens {
 private:
+	vector<CToken> Tokens;
 public:
-
+	ProgramTokens(vector<string>& lines, struct Symbols* sym);
+	~ProgramTokens();
 };
 
 #endif
