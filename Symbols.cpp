@@ -3,6 +3,7 @@
 
 static bool find(string a, string b) { // TODO: Debug this function, there is something wrong with it.
 	// find b in first characters of a:
+	/*
 	vector<bool> out;
 	bool ret = true;
 	for (int i = 0; i < a.size(); ++i) {
@@ -14,7 +15,9 @@ static bool find(string a, string b) { // TODO: Debug this function, there is so
 	for (int i = 0; i < out.size(); ++i) {
 		ret = ret || out[i];
 	}
-	return ret;
+	*/
+	
+	return a == b;
 }
 
 vector<string>& possibleMatchs(string in, Symbols* sym)
