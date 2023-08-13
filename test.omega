@@ -5,10 +5,6 @@
 @CONST nine 9
 @CONST seven_double 7.0
 
-int var : \
-		  \
-		  9@nine; should become 99
+int var : 'Hello World!'
 
-int var2 : \
-		@nine7; should become 97
 

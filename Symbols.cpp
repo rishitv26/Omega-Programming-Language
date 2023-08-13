@@ -20,7 +20,7 @@ static bool find(string a, string b) { // TODO: Debug this function, there is so
 	return a == b;
 }
 
-vector<string>& possibleMatchs(string in, Symbols* sym)
+string possibleMatchs(string in, Symbols* sym)
 {
 	// unsigned long long n = 18446744073709551615;
 	vector<string> matchs;
@@ -74,5 +74,6 @@ vector<string>& possibleMatchs(string in, Symbols* sym)
 	temp = ""; if (in[0] == sym->LOCATION) { temp += in[0]; matchs.push_back(temp); }
 	temp = ""; if (in[0] == sym->POINTS) { temp += in[0]; matchs.push_back(temp); }
 
-	return matchs;
+	if (matchs.empty()) return "";
+	return matchs[0];
 }

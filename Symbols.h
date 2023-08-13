@@ -75,6 +75,6 @@ struct Symbols {
 };
 
 // function to match givin symbol:
-vector<string>& possibleMatchs(string in, struct Symbols* sym);
+string possibleMatchs(string in, struct Symbols* sym);
 
 #endif
