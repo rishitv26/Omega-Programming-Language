@@ -1,14 +1,19 @@
 #include "common.h"
 
-const string Operation::get_symbol()
+using std::cout;
+
+const string Operation::get_symbol(bool raw)
 {
     string ret = "";
-    if ((int)op1) {
-        ret += op1;
-        return ret;
+    if (op1 != (char)0) {
+        if (!raw) ret += op1;
+        else if (op1 == '\n') ret += "\\n";
+        else ret += op1;
     }
     else if (op2 != "") {
-        return op2;
+        if (!raw) return op2;
+        else if (op1 == '\n') return "\\n";
+        else return op2;
     }
     else _call_abort(__LINE__, __FILE__);
     return ret;
@@ -17,8 +22,7 @@ const string Operation::get_symbol()
 void _TOKEN_TYPE::set(void* I, ValidTokens t) { token_ptr = I; token_t = t; }
 
 #define DESTROYER(x) delete (struct x*) token_ptr
-_TOKEN_TYPE::~_TOKEN_TYPE()
-{}
+_TOKEN_TYPE::~_TOKEN_TYPE() {}
 
 static bool isInt(string& in) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
@@ -97,6 +101,7 @@ static bool isIdentifier(string& str) {
 
     return true;
 }
+#define isLiteral(x) isInt(x) || isBool(x) || isPoint(x) || isDouble(x) || isList(x) || isDict(x) || isArray(x)
 ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
 {
     if (
@@ -130,8 +135,8 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
         ((str == sym->GREATER_EQUAL) && !isArray(str)) ||
         str == sym->AND ||
         str == sym->OR ||
-        str == sym->NOT
-
+        str == sym->NOT || 
+        str == sym->EXIT
     ) { // if statement for Operations
         return ValidTokens::OPERATION;
     } else if (
@@ -144,15 +149,9 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
         str[0] == sym->COMMA
     ) { // start of line operation:
         return ValidTokens::OTHERS;
-    } else if (
-        isInt(str) ||
-        isString(str) ||
-        isBool(str) ||
-        isPoint(str) ||
-        isDouble(str) ||
-        isList(str) ||
-        isDict(str) ||
-        isArray(str)
+    }
+    else if (
+        isLiteral(str)
     ) {
         return ValidTokens::LITERAL;
     }
@@ -160,10 +159,11 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
 }
 
 #define APPEND_INS(x) struct _TOKEN_TYPE token; token.set((void*)x, t); Tokens.push_back(token)
-#define isLiteral(x) isInt(x) || isBool(x) || isPoint(x) || isDouble(x) || isList(x) || isDict(x) || isArray(x)
+
 ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) // TODO: Debug this:
 {
     cout << "TOKENIZING CODE -----------------------" << endl << endl;
+    bool b = false;
     for (string l : lines) {
         string line = l + ' ';
         string temp2 = ""; // what previous word was
@@ -171,31 +171,30 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) // TODO
         bool toggle = false;
         for (char i : line) {
             cout << i;
-
             // String literal checking...
             if (i == sym->STRING_DEF) {
-                if (toggle) toggle = false;
+                if (toggle) { 
+                    temp += i;
+                    // add it as a literal:
+                    struct Literal* ident = new Literal();
+                    ident->name = temp;
+                    CToken token;
+                    token.set((void*)ident, ValidTokens::LITERAL);
+                    Tokens.push_back(token);
+                    toggle = false; 
+                }
                 else toggle = true;
             }
             if (toggle) {
                 temp += i;
                 continue;
             }
-            else if (temp[0] == sym->STRING_DEF) {
-                temp += i;
-                // add it as a literal:
-                struct Literal* ident = new Literal();
-                ident->name = temp;
-                CToken token;
-                token.set((void*)ident, ValidTokens::LITERAL);
-                Tokens.push_back(token);
-            }
 
             // Space checking...
             if (i == ' ' || i == '\t') { 
                 temp2 = temp;
                 temp = ""; 
-                continue; 
+                continue;
             }
             
             // Identifier checking:
@@ -212,33 +211,49 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) // TODO
             
             // ValidTokens checking...
             if (m != "") { // found one match:
-                
-                // find valid token for it:
-                //     All other detectory stuff, other than identifier...
-                    ValidTokens t = findTokenType(m, sym);
-                    if (t == ValidTokens::KEYWORD) {
-                        struct Keyword* key = new Keyword(m);
-                        APPEND_INS(key);
-                    }
-                    else if (t == ValidTokens::OPERATION) {
-                        struct Operation* op = new Operation();
-                        if (m.size() == 1) op->op1 = m[0];
-                        else op->op2 = m;
-                        APPEND_INS(op);
-                    }
-                    else if (t == ValidTokens::OTHERS) {
-                        struct Others* other = new Others(m[0]);
-                        APPEND_INS(other);
-                    }
+                    // find valid token for it:
+                    // All other detectory stuff, other than identifier...
+                ValidTokens t = findTokenType(m, sym);
+                if (m == sym->EXIT) { 
+                    struct Operation* op = new Operation();
+                    if (m.size() == 1) op->op1 = m[0];
+                    else op->op2 = m;
+                    APPEND_INS(op);
+                    b = true; break; 
+                 }
+                 if (t == ValidTokens::KEYWORD) {
+                     struct Keyword* key = new Keyword(m);
+                     APPEND_INS(key);
+                 }
+                 else if (t == ValidTokens::OPERATION) {
+                     struct Operation* op = new Operation();
+                     if (m.size() == 1) op->op1 = m[0];
+                     else op->op2 = m;
+                     APPEND_INS(op);
+                 }
+                 else if (t == ValidTokens::OTHERS) {
+                     struct Others* other = new Others(m[0]);
+                     APPEND_INS(other);
+                 }
             }
 
         }
-        // add a scentence terminator here...
+        // check if there is an identifier left:
+        if (isIdentifier(temp2) && (findTokenType(temp2, sym) == ValidTokens::IDENTIFIER)) {
+            // temp2 is an identifier:
+            struct Identifier* ident = new Identifier(temp2);
+            CToken token;
+            token.set((void*)ident, ValidTokens::IDENTIFIER);
+            Tokens.push_back(token);
+        }
+
+        // add a scentence ender...
+        if (b) break;
         struct EndLine* end = new EndLine(sym->END_LINE);
         struct _TOKEN_TYPE token; 
         token.set((void*)end, ValidTokens::OTHERS);
         Tokens.push_back(token);
-        // go to next line:
+
         cout << endl;
     }
 }
@@ -246,3 +261,30 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) // TODO
 ProgramTokens::~ProgramTokens() {}
 
 vector<CToken>& ProgramTokens::return_tokens() { return Tokens; }
+
+void ProgramTokens::print_tokens()
+{
+    for (CToken i : return_tokens()) {
+        if (i.token_t == ValidTokens::IDENTIFIER) {
+            struct Identifier id = *((struct Identifier*)i.token_ptr);
+            cout << id.name << ' ' << "-> ";
+        }
+        else if (i.token_t == ValidTokens::KEYWORD) {
+            struct Keyword id = *((struct Keyword*)i.token_ptr);
+            cout << id.name << ' ' << "-> ";
+        }
+        else if (i.token_t == ValidTokens::LITERAL) {
+            struct Literal id = *((struct Literal*)i.token_ptr);
+            cout << id.name << ' ' << "-> ";
+        }
+        else if (i.token_t == ValidTokens::OPERATION) {
+            struct Operation id = *((struct Operation*)i.token_ptr);
+            cout << id.get_symbol(true) << ' ' << "-> ";
+        }
+        else {
+            struct Others id = *((struct Others*)i.token_ptr);
+            cout << id.name << ' ' << "-> ";
+        }
+    }
+    cout << endl;
+}

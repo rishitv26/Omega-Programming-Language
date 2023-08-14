@@ -26,9 +26,9 @@ struct Literal {
 };
 
 struct Operation {
-	unsigned char op1 = NULL;
+	unsigned char op1 = (char)0;
 	string op2 = "";
-	const string get_symbol();
+	const string get_symbol(bool raw = false);
 };
 
 struct Others {
@@ -62,6 +62,7 @@ public:
 	~ProgramTokens();
 
 	vector<CToken>& return_tokens();
+	void print_tokens();
 };
 
 #endif

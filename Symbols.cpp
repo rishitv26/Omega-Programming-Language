@@ -1,22 +1,7 @@
 #include "common.h"
 #include "symbols.h"
 
-static bool find(string a, string b) { // TODO: Debug this function, there is something wrong with it.
-	// find b in first characters of a:
-	/*
-	vector<bool> out;
-	bool ret = true;
-	for (int i = 0; i < a.size(); ++i) {
-		if (a[i] == b[i]) out.push_back(true);
-		else out.push_back(false);
-
-		if (i + 1 == b.size()) break;
-	}
-	for (int i = 0; i < out.size(); ++i) {
-		ret = ret || out[i];
-	}
-	*/
-	
+static bool find(string a, string b) {
 	return a == b;
 }
 
@@ -69,7 +54,6 @@ string possibleMatchs(string in, Symbols* sym)
 	temp = ""; if (in[0] == sym->START_SCOPE) { temp += in[0]; matchs.push_back(temp); }
 	temp = ""; if (in[0] == sym->END_SCOPE) { temp += in[0]; matchs.push_back(temp); }
 	temp = ""; if (in[0] == sym->COMMA) { temp += in[0]; matchs.push_back(temp); }
-	temp = ""; if (in[0] == sym->STRING_DEF) { temp += in[0]; matchs.push_back(temp); }
 	// comment line, continue, and preproc are skipped, since they are preproccessed.
 	temp = ""; if (in[0] == sym->LOCATION) { temp += in[0]; matchs.push_back(temp); }
 	temp = ""; if (in[0] == sym->POINTS) { temp += in[0]; matchs.push_back(temp); }

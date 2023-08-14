@@ -1,10 +1,10 @@
 ; TESTING PROGRAM:
 
 ; create a constant:
-
 @CONST nine 9
-@CONST seven_double 7.0
 
-int var : 'Hello World!'
+; now to test int literals:
+string var : 'H' 
+string to_add : 'i'
 
-
+string output : var + to_add
