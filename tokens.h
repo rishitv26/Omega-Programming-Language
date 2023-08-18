@@ -9,6 +9,7 @@ enum class ValidTokens {
 	LITERAL = 2,
 	OPERATION = 3,
 	OTHERS = 4,
+	RESERVED = 5
 };
 
 struct Identifier {
@@ -31,14 +32,14 @@ struct Operation {
 	const string get_symbol(bool raw = false);
 };
 
+struct Reserved {
+	string name;
+	Reserved(string n) :name(n) {}
+};
+
 struct Others {
 	char name; 
 	Others(RAW_SYMBOL sym) :name(sym) {};
-};
-
-struct EndLine {
-	char c;
-	EndLine(RAW_SYMBOL sym) { c = sym; }
 };
 
 // fundamental type for every token:

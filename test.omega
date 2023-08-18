@@ -4,7 +4,9 @@
 @CONST nine 9
 
 ; now to test int literals:
-string var : 'H' 
-string to_add : 'i'
-
-string output : var + to_add
+while ( var == 'H' ) {
+	print ('hoila')
+}
+if (I_am_amazing== true) {
+	print('I am amazing!')
+}
