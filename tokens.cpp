@@ -26,13 +26,15 @@ _TOKEN_TYPE::~_TOKEN_TYPE() {}
 static bool isInt(string& in) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
+    bool b = false;
     for (char i : in) {
         for (char num : table) {
-            if (i != num) return false;
+            if (i != num) b = b || false;
+            else b = b || true;
         }
     }
 
-    return true;
+    return b;
 }
 static bool isString(string& in) {
     struct Symbols s; // can be created here since it gets destroyed at end of function.
@@ -163,125 +165,14 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
 }
 
 #define APPEND_INS(x) struct _TOKEN_TYPE token; token.set((void*)x, t); Tokens.push_back(token)
-/*
-ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) // TODO: Debug this:
-{
-    cout << "TOKENIZING CODE -----------------------" << endl << endl;
-    bool b = false;
-    for (string l : lines) {
-        string line = l + ' ';
-        string temp2 = ""; // what previous word was
-        string temp = ""; // current word
-        bool toggle = false;
-        bool reg = false;
-
-
-        for (char i : line) {
-            cout << i;
-            // String literal checking...
-            if (i == sym->STRING_DEF) {
-                Register;
-                if (toggle) { 
-                    temp += i;
-                    // add it as a literal:
-                    struct Literal* ident = new Literal();
-                    ident->name = temp;
-                    CToken token;
-                    token.set((void*)ident, ValidTokens::LITERAL);
-                    Tokens.push_back(token);
-                    toggle = false; 
-                }
-                else toggle = true;
-            }
-            if (toggle) {
-                Register;
-                temp += i;
-                continue;
-            }
-
-            // Space checking...
-            if (i == ' ' || i == '\t') { 
-                if (!reg) temp2 = temp;
-                temp = ""; 
-                continue;
-            }
-            
-            // Identifier checking:
-            temp += i;
-            string m = possibleMatchs(temp, sym); // look for possible token match's
-            if ((temp.size() == 1 && temp2 != "") && isIdentifier(temp2) && (findTokenType(temp2, sym) == ValidTokens::IDENTIFIER)) {
-                Register;
-                // temp2 is an identifier:
-                struct Identifier* ident = new Identifier(temp2);
-                CToken token; 
-                token.set((void*)ident, ValidTokens::IDENTIFIER);
-                Tokens.push_back(token);
-                
-            }
-            
-            // ValidTokens checking...
-            if (m != "") { // found one match:
-                // find valid token for it:
-                // All other detectory stuff, other than identifier...
-                Register;
-                ValidTokens t = findTokenType(m, sym);
-                if (m == sym->EXIT) { 
-                    struct Operation* op = new Operation();
-                    if (m.size() == 1) op->op1 = m[0];
-                    else op->op2 = m;
-                    APPEND_INS(op);
-                    b = true; break; 
-                 }
-                 if (t == ValidTokens::KEYWORD) {
-                     struct Keyword* key = new Keyword(m);
-                     APPEND_INS(key);
-                 }
-                 else if (t == ValidTokens::OPERATION) {
-                     struct Operation* op = new Operation();
-                     if (m.size() == 1) op->op1 = m[0];
-                     else op->op2 = m;
-                     APPEND_INS(op);
-                 }
-                 else if (t == ValidTokens::OTHERS) {
-                     struct Others* other = new Others(m[0]);
-                     APPEND_INS(other);
-                 }
-                 temp2 = temp;
-                 temp = "";
-                 reg = true;
-            }
-
-        }
-
-
-        // check if there is identifiers and literals left:
-        if (isIdentifier(temp2) && (findTokenType(temp2, sym) == ValidTokens::IDENTIFIER)) {
-            // temp2 is an identifier:
-            struct Identifier* ident = new Identifier(temp2);
-            CToken token;
-            token.set((void*)ident, ValidTokens::IDENTIFIER);
-            Tokens.push_back(token);
-        }
-        
-        // add a scentence ender...
-        if (b) break;
-        struct EndLine* end = new EndLine(sym->END_LINE);
-        struct _TOKEN_TYPE token; 
-        token.set((void*)end, ValidTokens::OTHERS);
-        Tokens.push_back(token);
-
-        cout << endl;
-    }
-    cout << endl;
-}
-*/
 ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
-    for (string line : lines) {
+    for (string& line : lines) {
+        line += ' ';
         string current_line = "";
         bool toggle = false;
         bool end = false;
 
-        for (int i = 0; i < line.size(); ++i) {
+        for (int i = 0; i < line.size() - 1; ++i) {
             // cout << line[i];
             // string checking:
             if (line[i] == sym->STRING_DEF) {
@@ -344,6 +235,45 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
                         APPEND_INS(id);
                         current_line = ""; // blank out
                         break;
+                    }
+                }
+            }
+            else if ((match.size() == 0) && isDouble(current_line)) {
+                string temp; temp += line[i + 1];
+                if (!isDouble(temp)) {
+                    // found a double literal!
+                    ValidTokens t = ValidTokens::LITERAL;
+                    struct Literal* lit = new Literal();
+                    lit->name = current_line;
+                    APPEND_INS(lit);
+                    current_line = ""; // blank out
+                }
+            }
+            // check for integer literals:
+            else if ((match.size() == 0) && isInt(current_line)) {
+                string temp; temp += line[i + 1];
+                if (!isInt(temp)) {
+                    // found an integer literal!
+                    ValidTokens t = ValidTokens::LITERAL;
+                    struct Literal* lit = new Literal();
+                    lit->name = current_line;
+                    APPEND_INS(lit);
+                    current_line = ""; // blank out
+                }
+            }
+            // check for pointer literals:
+            else if ((match.size() == 0) && isPoint(current_line)) {
+                const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
+                , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X' };
+
+                for (char j : table) {
+                    if (line[i + 1] == j) {
+                        // found a pointer literal!
+                        ValidTokens t = ValidTokens::LITERAL;
+                        struct Literal* lit = new Literal();
+                        lit->name = current_line;
+                        APPEND_INS(lit);
+                        current_line = ""; // blank out
                     }
                 }
             }

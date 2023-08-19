@@ -1,12 +1,8 @@
 ; TESTING PROGRAM:
-
 ; create a constant:
+
 @CONST nine 9
 
 ; now to test int literals:
-while ( var == 'H' ) {
-	print ('hoila')
-}
-if (I_am_amazing== true) {
-	print('I am amazing!')
-}
+
+int v : @nine99

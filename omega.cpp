@@ -50,7 +50,7 @@ int main() {
 
     // preproccessor and simplification complete: start tokenising code ->
     ProgramTokens tokens(lines, &symbols); // <- tokenises code
-
+    cout << "TOKENIZED CODE: ----------------------" << endl << endl;
     tokens.print_tokens();
 
     // compilation complete

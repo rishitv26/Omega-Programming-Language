@@ -10,15 +10,15 @@ typedef const string& RESERVED;
 // all struct symbols in here...
 struct Symbols {
 	// reserved names:
-	TYPE_LATERAL INT = "int";
-	TYPE_LATERAL STRING = "string";
-	TYPE_LATERAL BOOL = "bool";
-	TYPE_LATERAL POINT = "point";
-	TYPE_LATERAL DOUBLE = "double";
+	TYPE_LATERAL INT = "int"; // done
+	TYPE_LATERAL STRING = "string"; // done
+	TYPE_LATERAL BOOL = "bool"; // done
+	TYPE_LATERAL POINT = "point"; // done
+	TYPE_LATERAL DOUBLE = "double"; // done
 	TYPE_LATERAL LIST = "list"; // list is always [a, b, c, d]
-	TYPE_LATERAL DICT = "dict"; // always {{a, b}, {c, d}}
+	TYPE_LATERAL DICT = "dict"; // always d{p{a, b}, p{c, d}}
 	TYPE_LATERAL ARRAY = "array"; // always <a, b, c, d>
-	TYPE_LATERAL CLASS = "class"; // list, dict, and arrays are builtin classes.
+	TYPE_LATERAL CLASS = "class"; // classes.
 	TYPE_LATERAL CONSTANT = "@CONST "; // space at the end is important here...
 
 	// operators:
