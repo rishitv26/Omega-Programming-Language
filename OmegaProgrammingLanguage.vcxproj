@@ -129,7 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="test.omega" />
+    <None Include="test.omg" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="errors.cpp" />

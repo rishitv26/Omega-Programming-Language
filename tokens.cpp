@@ -41,6 +41,7 @@ static bool isString(string& in) {
     if (in[0] != s.STRING_DEF || in[in.size() - 1] != s.STRING_DEF) return false;
     return true;
 }
+// done till here
 static bool isPoint(string& in) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
     , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X'};
@@ -238,6 +239,23 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
                     }
                 }
             }
+            // check for pointer literals:
+            else if ((match.size() == 0) && isPoint(current_line)) {
+
+                const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
+                , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X' };
+
+                for (char j : table) {
+                    if (line[i + 1] == j) {
+                        // found a pointer literal!
+                        ValidTokens t = ValidTokens::LITERAL;
+                        struct Literal* lit = new Literal();
+                        lit->name = current_line;
+                        APPEND_INS(lit);
+                        current_line = ""; // blank out
+                    }
+                }
+            }
             else if ((match.size() == 0) && isDouble(current_line)) {
                 string temp; temp += line[i + 1];
                 if (!isDouble(temp)) {
@@ -259,22 +277,6 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
                     lit->name = current_line;
                     APPEND_INS(lit);
                     current_line = ""; // blank out
-                }
-            }
-            // check for pointer literals:
-            else if ((match.size() == 0) && isPoint(current_line)) {
-                const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
-                , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X' };
-
-                for (char j : table) {
-                    if (line[i + 1] == j) {
-                        // found a pointer literal!
-                        ValidTokens t = ValidTokens::LITERAL;
-                        struct Literal* lit = new Literal();
-                        lit->name = current_line;
-                        APPEND_INS(lit);
-                        current_line = ""; // blank out
-                    }
                 }
             }
         }

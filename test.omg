@@ -1,8 +1,15 @@
 ; TESTING PROGRAM:
 ; create a constant:
 
+@IMPORT memory.omg
 @CONST nine 9
 
 ; now to test int literals:
 
-int v : @nine99
+int v : @nine
+
+; OOP plans:
+class Object (params)
+{
+
+}

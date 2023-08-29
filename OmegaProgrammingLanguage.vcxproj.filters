@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.omega" />
+    <None Include="test.omg" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

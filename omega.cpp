@@ -2,7 +2,7 @@
 
 // commandline compiler ->
 int main() {
-    const string file_name = "test.omega";
+    const string file_name = "test.omg";
 
     // collect code from file:
     string code;
