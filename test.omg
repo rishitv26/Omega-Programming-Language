@@ -1,15 +1,18 @@
 ; TESTING PROGRAM:
 ; create a constant:
 
-@IMPORT memory.omg
 @CONST nine 9
 
-; now to test int literals:
+; point literals:
+point v : x93FA
+; int literals:
+int v1 : 23
+; string literals:
+string v2 : "hello"
+; double literals:
+double v3 : 0.23
 
-int v : @nine
-
-; OOP plans:
-class Object (params)
-{
-
+; function definitions:
+void function ( int v1, int v2, int v3 ) {
+	; body here:
 }

@@ -8,6 +8,10 @@ typedef const string& LOGIC;
 typedef const string& RESERVED;
 
 // all struct symbols in here...
+// add symbols by:
+// adding it here
+// adding in possibleMatchs & isTokenMatch
+// adding in findTokenType
 struct Symbols {
 	// reserved names:
 	TYPE_LATERAL INT = "int"; // done
@@ -42,7 +46,7 @@ struct Symbols {
 	RAW_SYMBOL COMMA = ','; // 44
 	RAW_SYMBOL COMMENT = ';'; // 59
 	RAW_SYMBOL CONTINUE_LINE = '\\'; // 92
-	RAW_SYMBOL STRING_DEF = '\''; // 39
+	RAW_SYMBOL STRING_DEF = '\"'; // 34
 
 	// comparision:
 	COMPARISION IS_EQUAL = "==";
@@ -72,6 +76,7 @@ struct Symbols {
 	RESERVED EXIT = "__exit";
 	RESERVED TRUE = "true";
 	RESERVED FALSE = "false";
+	RESERVED VOID = "void";
 };
 
 // function to match givin symbol:

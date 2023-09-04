@@ -46,7 +46,7 @@ static bool isPoint(string& in) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
     , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X'};
 
-    if (in[0] != '0' || (in[1] != 'x' || in[1] != 'X')) return false;
+    if ((in[0] != 'x' || in[0] != 'X')) return false;
     if (count(in.begin(), in.end(), 'x') != 1) return false;
     for (char i : in) {
         for (char num : table) {
@@ -109,7 +109,8 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
         str == sym->DOUBLE ||
         str == sym->LIST ||
         str == sym->ARRAY || 
-        str == sym->CLASS
+        str == sym->CLASS ||
+        str == sym->VOID
         // constant is skipped since it is preproccessed.
 
     ) { // if statement for Keyword
@@ -158,7 +159,7 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
         str == sym->FOR ||
         str == sym->EXIT ||
         str == sym->TRUE ||
-        str == sym->FALSE 
+        str == sym->FALSE
     ) {
         return ValidTokens::RESERVED;
     }
@@ -226,6 +227,23 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
 
                 current_line = ""; // blank out for next word:
             }
+            // check for other components:
+            else if ((match.size() == 0) && isPoint(current_line)) {
+
+                const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
+                , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+                for (char j : table) {
+                    if (line[i + 1] == j) {
+                        // found a pointer literal!
+                        ValidTokens t = ValidTokens::LITERAL;
+                        struct Literal* lit = new Literal();
+                        lit->name = current_line;
+                        APPEND_INS(lit);
+                        current_line = ""; // blank out
+                    }
+                }
+            }
             else if ((match.size() == 0) && isIdentifier(current_line)) { // nothing matched, maybe identifier or literal?
                 const char not_allowed[] = ",./:'\\][-=+!@#$%^&*()~` \t'\"{};|";
                 for (char j : not_allowed) {
@@ -239,35 +257,6 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
                     }
                 }
             }
-            // check for pointer literals:
-            else if ((match.size() == 0) && isPoint(current_line)) {
-
-                const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
-                , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X' };
-
-                for (char j : table) {
-                    if (line[i + 1] == j) {
-                        // found a pointer literal!
-                        ValidTokens t = ValidTokens::LITERAL;
-                        struct Literal* lit = new Literal();
-                        lit->name = current_line;
-                        APPEND_INS(lit);
-                        current_line = ""; // blank out
-                    }
-                }
-            }
-            else if ((match.size() == 0) && isDouble(current_line)) {
-                string temp; temp += line[i + 1];
-                if (!isDouble(temp)) {
-                    // found a double literal!
-                    ValidTokens t = ValidTokens::LITERAL;
-                    struct Literal* lit = new Literal();
-                    lit->name = current_line;
-                    APPEND_INS(lit);
-                    current_line = ""; // blank out
-                }
-            }
-            // check for integer literals:
             else if ((match.size() == 0) && isInt(current_line)) {
                 string temp; temp += line[i + 1];
                 if (!isInt(temp)) {

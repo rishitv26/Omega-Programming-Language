@@ -45,6 +45,7 @@ vector<string> possibleMatchs(string in, Symbols* sym)
 	if (find(sym->TRUE, in)) matchs.push_back(sym->TRUE);
 	if (find(sym->FALSE, in)) matchs.push_back(sym->FALSE);
 	if (find(sym->CLASS, in)) matchs.push_back(sym->CLASS);
+	if (find(sym->VOID, in)) matchs.push_back(sym->VOID);
 	
 	// now check all chars:
 	string temp;
@@ -102,6 +103,7 @@ string isTokenMatchs(string in, Symbols* sym)
 	if (find1(sym->TRUE, in)) matchs.push_back(sym->TRUE);
 	if (find1(sym->FALSE, in)) matchs.push_back(sym->FALSE);
 	if (find1(sym->CLASS, in)) matchs.push_back(sym->CLASS);
+	if (find1(sym->VOID, in)) matchs.push_back(sym->VOID);
 	// now check all chars:
 	string temp;
 	temp = ""; if (in[0] == sym->MOD) { temp += in[0]; matchs.push_back(temp); }
