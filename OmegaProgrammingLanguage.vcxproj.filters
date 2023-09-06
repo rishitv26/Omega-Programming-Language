@@ -34,6 +34,9 @@
     <ClCompile Include="tokens.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rules.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="symbols.h">
@@ -52,6 +55,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tokens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rules.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -135,6 +135,7 @@
     <ClCompile Include="errors.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="omega.cpp" />
+    <ClCompile Include="rules.cpp" />
     <ClCompile Include="symbols.cpp" />
     <ClCompile Include="tokens.cpp" />
   </ItemGroup>
@@ -143,6 +144,7 @@
     <ClInclude Include="errors.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="rules.h" />
     <ClInclude Include="symbols.h" />
     <ClInclude Include="tokens.h" />
   </ItemGroup>

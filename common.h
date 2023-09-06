@@ -17,5 +17,6 @@ using namespace std;
 #include "symbols.h" 
 #include "tokens.h"
 #include "lexer.h"
+#include "rules.h"
 
 #endif
