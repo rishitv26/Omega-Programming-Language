@@ -17,8 +17,8 @@ public:
 	RuleBody& get_next(int index = 0);
 	void set_index(RuleBody* val, int index = 0);
 };
+typedef vector<vector<RuleBody*>> rule;
 
-map<string, vector<RuleBody*>> Rules;
 void initRules();
 void endRules();
 
