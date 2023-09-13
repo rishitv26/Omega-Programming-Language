@@ -24,9 +24,53 @@ string str : "Strings are only double quotes"
 
 str : "I am modifying the variable value"
 int NewVar : Variable - 89 ;assignment to expressions.
-
-
 ```
 
+There are currently 8 builtin/primitive datatypes. These include:
+* int (integer)
+* string (string)
+* bool (boolean)
+* point (pointer)
+* double (double)
+* list (list)
+* dict (dictionary / map)
+* array (array)
 
+All of them are mainly straight forward, except for pointer. Pointers in Omega can hold a pointer to ANY givin type, or just a raw memory location.
+Here are a few usage example usages for every type:
 
+#### Integers
+```
+int integer : 9 ;; an integer that stores the variable 9.
+integer : integer - 1 ;; decrementation
+```
+*** EXPERIMENTAL ***
+The integer type is made to be dynamic, allocating only the amount of size that is needed. For example, the variable 'integer' would currently be of type int, but if you give it a value of a long, it will become a long.
+
+#### Strings
+```
+string str : "Hello Sire" ;; a string that stores "Hello Sire".
+str.slice(6, 9) ;; slice the string from index 6 - 9, inclusive.
+```
+A string in Omega will look like a c array of chars with builtin methods.
+
+#### Boolean
+```
+bool george : true ;; a boolean with a value of true, or 1
+george.toggle() ;; toggle the value from true, to false
+```
+A boolean has only 1 method, which is toggle.
+
+#### Point
+```
+point ptr : x00AF ;; a pointer to a raw location in memory
+ptr.readAs(INT) ;; read location like an integer.
+
+int var : 3 ;; to point
+string str : "Hello Madam"
+
+point ptr2 : #var ;; points to the location of var.
+point ptr3 : #str ;; points to a DIFFERENT type.
+
+```
+The pointer type is special, as it can point to ANY datatype, or object. Unlike where in language like C, or C++, it is not possible in common practice.
