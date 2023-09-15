@@ -136,7 +136,7 @@ note that there is no need to delete heap pointers, as that is done automaticall
 
 # Library management.
 
-instead of having to import library files manualy into a project, Omega will come with a required OLS (Omega Library System). The OLS is PIP adapted for omega, where omega libraries can simply be installed from the OLD (Omega Library Databases), where all repositories to all libraries will be availible. One an install these manually, or run the command ```ols install 'desired library'``` to install the desired library.
+instead of having to import library files manualy into a project, Omega will come with a required OLS (Omega Library System). The OLS is PIP adapted for omega, where omega libraries can simply be installed from the OLD (Omega Library Databases), where all repositories to all libraries will be availible. One can install these manually, or run the command ```ols install 'desired library'``` to install the desired library.
 
 Note that there is no need of a virtual environment, as the Omega compiler will fetch only the files that are required by the programmer during compilation.
 
