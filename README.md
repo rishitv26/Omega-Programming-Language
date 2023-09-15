@@ -27,14 +27,16 @@ int NewVar : Variable - 89 ;assignment to expressions.
 ```
 
 There are currently 8 builtin/primitive datatypes. These include:
-* int (integer)    --\
-* string (string)    |
-* bool (boolean)     |-- primary types
-* point (pointer)    |
-* double (double)  --/
-* list (list)               --\
-* dict (dictionary / map)     |-- secondary types (not yet thought out)
-* array (array)             --/
+* -- Primary Types:
+* int (integer)  
+* string (string)
+* bool (boolean) 
+* point (pointer)
+* double (double)
+* -- Secondary Types: (not yet thought out)
+* list (list)
+* dict (dictionary / map)
+* array (array)
 
 All of them are mainly straight forward, except for pointer. Pointers in Omega can hold a pointer to ANY givin type, or just a raw memory location.
 Here are a few usage example usages for every type:
