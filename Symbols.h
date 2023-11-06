@@ -10,7 +10,7 @@ typedef const string& RESERVED;
 // all struct symbols in here...
 // add symbols by:
 // adding it here
-// adding in possibleMatchs & isTokenMatch
+// adding in possibleMatchs
 // adding in findTokenType
 struct Symbols {
 	// reserved names:
@@ -20,7 +20,6 @@ struct Symbols {
 	TYPE_LATERAL POINT = "point"; // done
 	TYPE_LATERAL DOUBLE = "double"; // done
 	TYPE_LATERAL LIST = "list"; // list is always [a, b, c, d]
-	TYPE_LATERAL DICT = "dict"; // always d{p{a, b}, p{c, d}}
 	TYPE_LATERAL ARRAY = "array"; // always <a, b, c, d>
 	TYPE_LATERAL CLASS = "class"; // classes.
 	TYPE_LATERAL CONSTANT = "@CONST "; // space at the end is important here...
@@ -62,6 +61,8 @@ struct Symbols {
 	// pointer stuff:
 	RAW_SYMBOL LOCATION = '#'; // 35
 	RAW_SYMBOL POINTS = '$'; // 36
+	RAW_SYMBOL START_INDEX = '['; // 91
+	RAW_SYMBOL END_INDEX = ']'; // 93
 
 	// logic:
 	LOGIC AND = "&&";
@@ -77,10 +78,12 @@ struct Symbols {
 	RESERVED TRUE = "true";
 	RESERVED FALSE = "false";
 	RESERVED VOID = "void";
+	RESERVED USE = "use";
+	RESERVED AS = "as";
 };
 
 // function to match givin symbol:
 vector<string> possibleMatchs(string in, struct Symbols* sym);
-string isTokenMatchs(string in, Symbols* sym);
+string isTokenMatchs(string in, vector<string> matchs);
 
 #endif

@@ -46,7 +46,6 @@ struct Others {
 typedef struct _TOKEN_TYPE {
 	ValidTokens token_t;
 	void* token_ptr = nullptr;
-	void* ptr_to_next_ins = nullptr;
 
 	void set(void* I, ValidTokens t);
 	~_TOKEN_TYPE();
@@ -64,6 +63,7 @@ public:
 
 	vector<CToken>& return_tokens();
 	void print_tokens();
+	void* atIndex(int i);
 };
 
 #endif

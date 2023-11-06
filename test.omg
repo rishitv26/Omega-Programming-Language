@@ -3,6 +3,7 @@
 
 @CONST nine 9
 
+use konga as quack
 ; point literals:
 point v : x93FA
 ; int literals:

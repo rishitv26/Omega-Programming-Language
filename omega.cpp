@@ -14,9 +14,11 @@ int main() {
     code = buffer.str();
     file.close();
 
+    /*
     cout << "READ INPUT -------------------------------" << endl;
     cout << code << endl;
     cout << "END OF RAW CODE --------------------------" << endl;
+    */
 
     struct Symbols symbols;
 
@@ -35,20 +37,26 @@ int main() {
     vector<int> indexs;
     LEXER_FIND_CONSTANTS(&indexs, &lines, &symbols);
     LEXER_FILL_CONST_TABLE(&indexs, &lines, &constants, &original_lines, &symbols, file_name);
+    /*
     for (auto elem : constants) {
         cout << "{ " << elem.first << ": " << elem.second << " }" << endl;
     }
+    */
     LEXER_REMOVE_LINES(&indexs, &lines);
     code = vect_to_str(lines, symbols.END_LINE); // update code
     LEXER_REPLACE_CONSTANTS(&constants, &lines, &code);
+
     // implement continue line behaviour:
     lines = split_by(code, &symbols, symbols.END_LINE, false, true);
     code = vect_to_str(lines, symbols.END_LINE);
 
+    /*
     cout << "RESULT ----------------------" << endl << endl;
     cout << code;
+    */
 
     // preproccessor and simplification complete: start tokenising code ->
+
     ProgramTokens tokens(lines, &symbols); // <- tokenises code
     cout << "TOKENIZED CODE: ----------------------" << endl << endl;
     tokens.print_tokens();

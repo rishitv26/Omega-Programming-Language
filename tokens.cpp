@@ -72,11 +72,6 @@ static bool isList(string& str) {
     if (str[0] != '[' || str[str.size() - 1] != ']') return false;
     return true;
 }
-static bool isDict(string& str) {
-    // no strict checking for now:
-    if (str[0] != '{' || str[str.size() - 1] != '}') return false;
-    return true;
-}
 static bool isArray(string& str) {
     // no strict checking for now:
     if (str[0] != '<' || str[str.size() - 1] != '>') return false;
@@ -98,7 +93,7 @@ static bool isIdentifier(string& str) {
 
     return true;
 }
-#define isLiteral(x) isInt(x) || isPoint(x) || isDouble(x) || isList(x) || isDict(x) || isArray(x)
+#define isLiteral(x) isInt(x) || isPoint(x) || isDouble(x) || isList(x) || isArray(x)
 ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
 {
     if (
@@ -140,8 +135,8 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
         str[0] == sym->END_LINE || 
         str[0] == sym->START_ARG ||
         str[0] == sym->END_ARG ||
-        ((str[0] == sym->START_SCOPE) && !isDict(str)) ||
-        ((str[0] == sym->END_SCOPE) && !isDict(str)) ||
+        str[0] == sym->START_SCOPE ||
+        str[0] == sym->END_SCOPE ||
         ((str[0] == sym->DOT) && !isDouble(str)) ||
         str[0] == sym->COMMA
     ) { // start of line operation:
@@ -159,7 +154,9 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
         str == sym->FOR ||
         str == sym->EXIT ||
         str == sym->TRUE ||
-        str == sym->FALSE
+        str == sym->FALSE ||
+        str == sym->USE ||
+        str == sym->AS
     ) {
         return ValidTokens::RESERVED;
     }
@@ -197,13 +194,13 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
             current_line += line[i];
             vector<string> match = possibleMatchs(current_line, sym);
 
-            if ((match.size() == 1) && isTokenMatchs(current_line, sym) != "") { // found exactly 1 match:
+            if ((match.size() == 1) && isTokenMatchs(current_line, match) != "") { // found exactly 1 match:
                 string m = match[0];
                 ValidTokens t = findTokenType(m, sym);
                 if (m == sym->EXIT) {
                     struct Reserved* res = new Reserved(sym->EXIT);
                     APPEND_INS(res);
-                    end = true; // and entire tokenization process
+                    end = true; // end entire tokenization process
                     break; // end proccess
                 }
                 if (t == ValidTokens::KEYWORD) {
@@ -228,7 +225,7 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
                 current_line = ""; // blank out for next word:
             }
             // check for other components:
-            else if ((match.size() == 0) && isPoint(current_line)) {
+            else if ((isTokenMatchs(current_line, match) == "") && isPoint(current_line)) {
 
                 const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
                 , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
@@ -244,7 +241,7 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
                     }
                 }
             }
-            else if ((match.size() == 0) && isIdentifier(current_line)) { // nothing matched, maybe identifier or literal?
+            else if ((isTokenMatchs(current_line, match) == "") && isIdentifier(current_line)) { // nothing matched, maybe identifier or literal?
                 const char not_allowed[] = ",./:'\\][-=+!@#$%^&*()~` \t'\"{};|";
                 for (char j : not_allowed) {
                     if ((j == line[i + 1]) && isIdentifier(current_line)) {
@@ -257,7 +254,7 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
                     }
                 }
             }
-            else if ((match.size() == 0) && isInt(current_line)) {
+            else if ((isTokenMatchs(current_line, match) == "") && isInt(current_line)) {
                 string temp; temp += line[i + 1];
                 if (!isInt(temp)) {
                     // found an integer literal!
@@ -313,3 +310,5 @@ void ProgramTokens::print_tokens()
     }
     cout << endl;
 }
+
+void* ProgramTokens::atIndex(int i) { return Tokens[i].token_ptr; }
