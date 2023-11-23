@@ -42,12 +42,15 @@ struct Others {
 	Others(RAW_SYMBOL sym) :name(sym) {};
 };
 
+#define isLiteral(x) isInt(x) || isPoint(x) || isDouble(x) || isList(x) || isArray(x)
+
 // fundamental type for every token:
 typedef struct _TOKEN_TYPE {
 	ValidTokens token_t;
 	void* token_ptr = nullptr;
 
 	void set(void* I, ValidTokens t);
+	string get_raw_val();
 	~_TOKEN_TYPE();
 } CToken;
 
@@ -63,7 +66,16 @@ public:
 
 	vector<CToken>& return_tokens();
 	void print_tokens();
-	void* atIndex(int i);
+	string atIndex(int i);
 };
+
+bool isInt(string& in);
+bool isString(string& in);
+// done till here
+bool isPoint(string& in);
+bool isDouble(string& str);
+bool isList(string& str);
+bool isArray(string& str);
+bool isIdentifier(string& str);
 
 #endif

@@ -21,9 +21,39 @@ const string Operation::get_symbol(bool raw)
 
 void _TOKEN_TYPE::set(void* I, ValidTokens t) { token_ptr = I; token_t = t; }
 
+string _TOKEN_TYPE::get_raw_val()
+{
+    string name;
+    if (token_t == ValidTokens::IDENTIFIER) {
+        struct Identifier id = *((struct Identifier*)token_ptr);
+        name = id.name;
+    }
+    else if (token_t == ValidTokens::KEYWORD) {
+        struct Keyword id = *((struct Keyword*)token_ptr);
+        name = id.name;
+    }
+    else if (token_t == ValidTokens::LITERAL) {
+        struct Literal id = *((struct Literal*)token_ptr);
+        name = id.name;
+    }
+    else if (token_t == ValidTokens::OPERATION) {
+        struct Operation id = *((struct Operation*)token_ptr);
+        name = id.get_symbol(true);
+    }
+    else if (token_t == ValidTokens::RESERVED) {
+        struct Reserved id = *((struct Reserved*)token_ptr);
+        name = id.name;
+    }
+    else {
+        struct Others id = *((struct Others*)token_ptr);
+        name = id.name;
+    }
+    return name;
+}
+
 _TOKEN_TYPE::~_TOKEN_TYPE() {}
 
-static bool isInt(string& in) {
+bool isInt(string& in) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
     bool b = false;
@@ -36,13 +66,13 @@ static bool isInt(string& in) {
 
     return b;
 }
-static bool isString(string& in) {
+bool isString(string& in) {
     struct Symbols s; // can be created here since it gets destroyed at end of function.
     if (in[0] != s.STRING_DEF || in[in.size() - 1] != s.STRING_DEF) return false;
     return true;
 }
 // done till here
-static bool isPoint(string& in) {
+bool isPoint(string& in) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd'
     , 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X'};
 
@@ -56,7 +86,7 @@ static bool isPoint(string& in) {
 
     return true;
 }
-static bool isDouble(string& str) {
+bool isDouble(string& str) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'};
 
     for (char i : str) {
@@ -67,17 +97,17 @@ static bool isDouble(string& str) {
 
     return true;
 }
-static bool isList(string& str) {
+bool isList(string& str) {
     // no strict checking for now.
     if (str[0] != '[' || str[str.size() - 1] != ']') return false;
     return true;
 }
-static bool isArray(string& str) {
+bool isArray(string& str) {
     // no strict checking for now:
     if (str[0] != '<' || str[str.size() - 1] != '>') return false;
     return true;
 }
-static bool isIdentifier(string& str) {
+bool isIdentifier(string& str) {
     // again, not strict.
     // _ is allowed, special characters are not allowed.
     const char not_allowed_in_front[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
@@ -93,7 +123,6 @@ static bool isIdentifier(string& str) {
 
     return true;
 }
-#define isLiteral(x) isInt(x) || isPoint(x) || isDouble(x) || isList(x) || isArray(x)
 ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
 {
     if (
@@ -124,8 +153,8 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
         str == sym->NOT_EQUAL ||
         str == sym->GREATER ||
         str == sym->LESSER ||
-        ((str == sym->LESSER_EQUAL) && !isArray(str)) ||
-        ((str == sym->GREATER_EQUAL) && !isArray(str)) ||
+        (str == sym->LESSER_EQUAL) ||
+        (str == sym->GREATER_EQUAL) ||
         str == sym->AND ||
         str == sym->OR ||
         str == sym->NOT
@@ -194,7 +223,7 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
             current_line += line[i];
             vector<string> match = possibleMatchs(current_line, sym);
 
-            if ((match.size() == 1) && isTokenMatchs(current_line, match) != "") { // found exactly 1 match:
+            if (isTokenMatchs(current_line, match) != "") { // found exactly 1 match:
                 string m = match[0];
                 ValidTokens t = findTokenType(m, sym);
                 if (m == sym->EXIT) {
@@ -311,4 +340,4 @@ void ProgramTokens::print_tokens()
     cout << endl;
 }
 
-void* ProgramTokens::atIndex(int i) { return Tokens[i].token_ptr; }
+string ProgramTokens::atIndex(int i) { return Tokens[i].get_raw_val(); }

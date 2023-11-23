@@ -2,7 +2,7 @@
 #define RULES_H
 
 // E = expression; # = identifier; I = integer; ... = expressions seperated with commas
-const vector<vector<string>> RULESET = {
+const vector<string> RULESET[] = {
 	// variables:
 	{"int", "#"},
 	{"int", "#", ":", "E"},
@@ -20,6 +20,14 @@ const vector<vector<string>> RULESET = {
 	{"array", "#"},
 	{"array", "#", ":", "<", "...", ">"},
 };
+// #E = expression
+const vector<string> UNARY_EXPR[] = {
+	{"!", "#E"},
+	{"#", "#E"},
+	{"$", "#E"},
+	{"-", "#E"},
+};
 
+bool isExpression(ProgramTokens& tokens, int start, int end);
 
 #endif
