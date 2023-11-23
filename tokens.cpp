@@ -111,11 +111,11 @@ bool isIdentifier(string& str) {
     // again, not strict.
     // _ is allowed, special characters are not allowed.
     const char not_allowed_in_front[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
-    const char not_allowed[] = ",./:'\\][-=+!@#$%^&*()~` \t'\"{};|";
+    const char not_allowed[] = ",./:'\\][-=+!@#$%^&*()~` \t'\"{};|<>?";
     for (char i : not_allowed_in_front) {
         if (str[0] == i) return false;
     }
-    for (int i = 0; i < (str.size() - 1); ++i) {
+    for (int i = 0; i < str.size(); ++i) {
         for (char j : not_allowed) {
             if (str[i] == j) return false;
         }

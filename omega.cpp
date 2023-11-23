@@ -61,6 +61,8 @@ int main() {
     cout << "TOKENIZED CODE: ----------------------" << endl << endl;
     tokens.print_tokens();
 
+    cout << isExpression(tokens, 0, tokens.return_tokens().size() - 3) << endl;
+
     // compilation complete
     return 0;
 }
