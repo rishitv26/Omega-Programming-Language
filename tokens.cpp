@@ -53,9 +53,16 @@ string _TOKEN_TYPE::get_raw_val()
 
 _TOKEN_TYPE::~_TOKEN_TYPE() {}
 
+static string getString(char x)
+{
+    string s(1, x);
+    return s;
+}
+
 bool isInt(string& in) {
     const char table[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
+    if (in == "\n" || in == "") return false;
     bool b = false;
     for (char i : in) {
         for (char num : table) {
@@ -67,9 +74,37 @@ bool isInt(string& in) {
     return b;
 }
 bool isString(string& in) {
-    struct Symbols s; // can be created here since it gets destroyed at end of function.
+    struct Symbols s;
     if (in[0] != s.STRING_DEF || in[in.size() - 1] != s.STRING_DEF) return false;
     return true;
+}
+bool isOperator(string& in) {
+    Symbols s;
+    string operators[] = {
+        getString(s.MOD),
+        getString(s.PLUS),
+        getString(s.MINUS),
+        getString(s.TIMES),
+        getString(s.DIVIDE),
+        getString(s.RAISETO),
+        s.IS_EQUAL,
+        s.NOT_EQUAL,
+        s.GREATER,
+        s.LESSER,
+        s.GREATER_EQUAL,
+        s.LESSER_EQUAL,
+        getString(s.LOCATION),
+        getString(s.POINTS),
+        getString(s.START_INDEX),
+        getString(s.END_INDEX),
+        s.AND,
+        s.OR,
+        s.NOT,
+    };
+    for (string& i : operators) {
+        if (in == i) return true;
+    }
+    return false;
 }
 // done till here
 bool isPoint(string& in) {

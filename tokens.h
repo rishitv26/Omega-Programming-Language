@@ -71,6 +71,7 @@ public:
 
 bool isInt(string& in);
 bool isString(string& in);
+bool isOperator(string& s);
 // done till here
 bool isPoint(string& in);
 bool isDouble(string& str);

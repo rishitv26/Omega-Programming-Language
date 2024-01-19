@@ -12,6 +12,7 @@ typedef const string& RESERVED;
 // adding it here
 // adding in possibleMatchs
 // adding in findTokenType
+// if adding an operator, add to isOperator
 struct Symbols {
 	// reserved names:
 	TYPE_LATERAL INT = "int"; // done

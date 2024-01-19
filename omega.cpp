@@ -61,7 +61,12 @@ int main() {
     cout << "TOKENIZED CODE: ----------------------" << endl << endl;
     tokens.print_tokens();
 
-    cout << isExpression(tokens, 0, tokens.return_tokens().size() - 3) << endl;
+    //cout << isExpression(tokens, 0, tokens.return_tokens().size() - 3) << endl;
+    cout << "After reduction..." << endl;
+    vector<string> tor = reduceExpressions(tokens, 0, tokens.return_tokens().size() - 1);
+    for (string i : tor) {
+        cout << i << " -> ";
+    }
 
     // compilation complete
     return 0;

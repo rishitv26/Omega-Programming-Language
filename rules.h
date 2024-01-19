@@ -3,51 +3,51 @@
 
 #define MAX_EXPR_CHECK 100
 
-// E = expression; # = identifier; I = integer; ... = expressions seperated with commas
+// /E = expression; /I = identifier; /Int = integer; ... = expressions seperated with commas
 const vector<string> RULESET[] = {
 	// variables:
-	{"int", "#"},
-	{"int", "#", ":", "E"},
-	{"string", "#"},
-	{"string", "#", ":", "E"},
-	{"bool", "#"},
-	{"bool", "#", ":", "E"},
-	{"point", "#"},
-	{"point", "#", ":", "E"},
-	{"double", "#"},
-	{"double", "#", ":", "E"},
-	{"double", "#", ":", "I", ".", "I"},
-	{"list", "#"},
-	{"list", "#", ":", "[", "...", "]"},
-	{"array", "#"},
-	{"array", "#", ":", "<", "...", ">"},
+	{"int", "/I"},
+	{"int", "/I", ":", "/E"},
+	{"string", "/I"},
+	{"string", "/I", ":", "/E"},
+	{"bool", "/I"},
+	{"bool", "/I", ":", "/E"},
+	{"point", "/I"},
+	{"point", "/I", ":", "/E"},
+	{"double", "/I"},
+	{"double", "/I", ":", "/E"},
+	{"double", "/I", ":", "/Int", ".", "/Int"},
+	{"list", "/I"},
+	{"list", "/I", ":", "[", "...", "]"},
+	{"array", "/I"},
+	{"array", "/I", ":", "<", "...", ">"},
 };
 // #E = expression
 const vector<string> UNARY_EXPR[] = {
-	{"!", "#E"},
-	{"#", "#E"},
-	{"$", "#E"},
-	{"-", "#E"},
+	{"!", "/E"},
+	{"#", "/E"},
+	{"$", "/E"},
+	{"-", "/E"},
 };
 const vector<string> BINARY_EXPR[] = {
-	{"(", "#E", ")"},
-	{"#E", ".", "#E"},
-	{"#E", "+", "#E"},
-	{"#E", "-", "#E"},
-	{"#E", "*", "#E"},
-	{"#E", "/", "#E"},
-	{"#E", "%", "#E"},
-	{"#E", "^", "#E"},
-	{"#E", "==", "#E"},
-	{"#E", "!=", "#E"},
-	{"#E", ">=", "#E"},
-	{"#E", "<=", "#E"},
-	{"#E", "<", "#E"},
-	{"#E", ">", "#E"},
-	{"#E", "||", "#E"},
-	{"#E", "&&", "#E"},
+	{"(", "/E", ")"},
+	{"/E", ".", "/E"},
+	{"/E", "+", "/E"},
+	{"/E", "-", "/E"},
+	{"/E", "*", "/E"},
+	{"/E", "/", "/E"},
+	{"/E", "%", "/E"},
+	{"/E", "^", "/E"},
+	{"/E", "==", "/E"},
+	{"/E", "!=", "/E"},
+	{"/E", ">=", "/E"},
+	{"/E", "<=", "/E"},
+	{"/E", "<", "/E"},
+	{"/E", ">", "/E"},
+	{"/E", "||", "/E"},
+	{"/E", "&&", "/E"},
 };
 
-bool isExpression(ProgramTokens& tokens, int start, int end);
+vector<string> reduceExpressions(ProgramTokens& tokens, int start, int end);
 
 #endif
