@@ -62,10 +62,75 @@ vector<string> reduceExpressions(ProgramTokens& tokens, int start, int end)
 			}
 			if (abs_break) break;
 		}
-
-		if (list.size() == 1 && list[0] == "/E") {
-			break;
-		}
+		if (list.size() == 1 && list[0] == "/E") break;
 	}
+
+	// comma seperated expression detection...
+	string prev_word = "";
+	string com(1, s.COMMA);
+	for (int i = 0; i < list.size(); ++i) {
+		if (prev_word == "/E") {
+			if (list[i] == com) {
+				list.erase(list.begin() + i);
+				list[i-1] = "...";
+				--i;
+			}
+		}
+		else if (prev_word == "...") {
+			if (list[i] == "/E") {
+				list.erase(list.begin() + i);
+				list[i-1] = "...";
+				--i;
+			}
+		}
+		prev_word = list[i];
+	}
+	prev_word = "";
+	for (int i = 0; i < list.size(); ++i) {
+		if (prev_word == "...") {
+			if (list[i] == com) {
+				list.erase(list.begin() + i);
+				list[i - 1] = "...";
+				--i;
+			}
+		}
+		prev_word = list[i];
+	}
+	prev_word = "";
+	for (int i = 0; i < list.size(); ++i) {
+		if (prev_word == "...") {
+			if (list[i] == "...") {
+				list.erase(list.begin() + i);
+				--i;
+			}
+		}
+		prev_word = list[i];
+	}
+
+	// parameter list expression detection... TODO
+	prev_word = "";
+	for (int i = 0; i < list.size() - 1; ++i) {
+		vector<string> possibles = possibleMatchs(list[i], &s);
+		if (
+			isTokenMatchs(prev_word, possibles) == s.INT ||
+			isTokenMatchs(prev_word, possibles) == s.STRING ||
+			isTokenMatchs(prev_word, possibles) == s.BOOL ||
+			isTokenMatchs(prev_word, possibles) == s.POINT ||
+			isTokenMatchs(prev_word, possibles) == s.DOUBLE ||
+			isTokenMatchs(prev_word, possibles) == s.LIST ||
+			isTokenMatchs(prev_word, possibles) == s.ARRAY ||
+			isTokenMatchs(prev_word, possibles) == s.CLASS
+		) {
+			if (list[i] == "/I" && list[i + i] == com) {
+				list.erase(list.begin() + i + 1);
+				list.erase(list.begin() + i);
+				list[i - 1] = "/P";
+				--i;
+			}
+		}
+
+		prev_word = list[i];
+	}
+
 	return list;
 }

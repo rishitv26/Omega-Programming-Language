@@ -12,6 +12,10 @@ int v1 : 23
 string v2 : "kabutar"
 ;; double literals:
 double v3 : 0.23
+
+;; arrays:
+array ch : < 1, 2, 4, 5, 8, 0 >
+
 void function : (int v1, int v2, int v3) {
 	; body here
 }

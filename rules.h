@@ -16,7 +16,6 @@ const vector<string> RULESET[] = {
 	{"point", "/I", ":", "/E"},
 	{"double", "/I"},
 	{"double", "/I", ":", "/E"},
-	{"double", "/I", ":", "/Int", ".", "/Int"},
 	{"list", "/I"},
 	{"list", "/I", ":", "[", "...", "]"},
 	{"array", "/I"},
