@@ -46,10 +46,12 @@ struct Others {
 
 // fundamental type for every token:
 typedef struct _TOKEN_TYPE {
+	int line_number = 0;
+	
 	ValidTokens token_t;
 	void* token_ptr = nullptr;
 
-	void set(void* I, ValidTokens t);
+	void set(void* I, ValidTokens t, int num);
 	string get_raw_val();
 	~_TOKEN_TYPE();
 } CToken;

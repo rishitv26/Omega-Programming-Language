@@ -22,6 +22,9 @@ void _call_compiler_error(const string line, unsigned int type, vector<string>& 
 	case CONSTANT_MULTIPLE_DEFINITIONS: 
 		cout << "\nConstant defined multiple times." << endl; 
 		break;
+	case INVALID_SYNTAX_TOKEN:
+		cout << "\nInvalid syntax." << endl;
+		break;
 
 	default: break;
 	}

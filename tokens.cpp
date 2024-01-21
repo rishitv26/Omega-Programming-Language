@@ -19,7 +19,7 @@ const string Operation::get_symbol(bool raw)
     return ret;
 }
 
-void _TOKEN_TYPE::set(void* I, ValidTokens t) { token_ptr = I; token_t = t; }
+void _TOKEN_TYPE::set(void* I, ValidTokens t, int num) { token_ptr = I; token_t = t; line_number = num; }
 
 string _TOKEN_TYPE::get_raw_val()
 {
@@ -227,8 +227,9 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
     return ValidTokens::IDENTIFIER;
 }
 
-#define APPEND_INS(x) struct _TOKEN_TYPE token; token.set((void*)x, t); Tokens.push_back(token)
+#define APPEND_INS(x) struct _TOKEN_TYPE token; token.set((void*)x, t, line_num); Tokens.push_back(token)
 ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
+    int line_num = 1;
     for (string& line : lines) {
         line += ' ';
         string current_line = "";

@@ -7,7 +7,7 @@ use konga as quack
 ;; point literals:
 point v : x93FA
 ;; int literals:
-int v1 : 23
+int v1 : @nine
 ;; string literals:
 string v2 : "kabutar"
 ;; double literals:
@@ -19,4 +19,3 @@ array ch : < 1, 2, 4, 5, 8, 0 >
 void function : (int v1, int v2, int v3) {
 	; body here
 }
-;7 + ( 5 + 0 )

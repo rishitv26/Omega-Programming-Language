@@ -6,6 +6,19 @@ vector<string> reduceExpressions(ProgramTokens& tokens, int start, int end)
 	vector<string> list;
 	for (int i = start; i < end + 1; ++i) list.push_back(tokens.atIndex(i));
 
+	// check for stealthy errors (where /I, /E, ..., etc. are part of code...)
+	for (string& i : list) {
+		if (
+			i == "/E" ||
+			i == "/I" ||
+			i == "..." ||
+			i == "/P" ||
+			i == "/T" ||
+			i == "/"
+		) {
+			;
+		}
+	}
 	// reduce list:
 	// standalone identifier simplifier:
 	for (int i = 1; i < list.size() - 1; ++i) {
@@ -68,69 +81,79 @@ vector<string> reduceExpressions(ProgramTokens& tokens, int start, int end)
 	// comma seperated expression detection...
 	string prev_word = "";
 	string com(1, s.COMMA);
-	for (int i = 0; i < list.size(); ++i) {
-		if (prev_word == "/E") {
-			if (list[i] == com) {
-				list.erase(list.begin() + i);
-				list[i-1] = "...";
-				--i;
-			}
+	for (int i = 1; i < list.size() - 1; ++i) {
+		if (list[i] == com && list[i - 1] == "/E" && list[i + 1] == "/E") {
+			list.erase(list.begin() + i + 1);
+			list.erase(list.begin() + i);
+			list[--i] = "...";
 		}
-		else if (prev_word == "...") {
-			if (list[i] == "/E") {
-				list.erase(list.begin() + i);
-				list[i-1] = "...";
-				--i;
-			}
-		}
-		prev_word = list[i];
 	}
-	prev_word = "";
-	for (int i = 0; i < list.size(); ++i) {
-		if (prev_word == "...") {
-			if (list[i] == com) {
-				list.erase(list.begin() + i);
-				list[i - 1] = "...";
-				--i;
-			}
+	for (int i = 1; i < list.size() - 1; ++i) {
+		if (list[i] == com && list[i - 1] == "..." && list[i + 1] == "...") {
+			list.erase(list.begin() + i + 1);
+			list.erase(list.begin() + i);
+			list[--i] = "...";
 		}
-		prev_word = list[i];
-	}
-	prev_word = "";
-	for (int i = 0; i < list.size(); ++i) {
-		if (prev_word == "...") {
-			if (list[i] == "...") {
-				list.erase(list.begin() + i);
-				--i;
-			}
-		}
-		prev_word = list[i];
 	}
 
-	// parameter list expression detection... TODO
+	// parameter list expression detection...
 	prev_word = "";
-	for (int i = 0; i < list.size() - 1; ++i) {
+	for (int i = 2; i < list.size() - 1; ++i) {
+		if (list[i] == "/I") {
+			vector<string> possibles = possibleMatchs(list[i - 1], &s);
+			if ((list[i + 1] == com ||
+				list[i - 2] == com
+			) && (
+				isTokenMatchs(list[i - 1], possibles) == s.INT ||
+				isTokenMatchs(list[i - 1], possibles) == s.STRING ||
+				isTokenMatchs(list[i - 1], possibles) == s.BOOL ||
+				isTokenMatchs(list[i - 1], possibles) == s.POINT ||
+				isTokenMatchs(list[i - 1], possibles) == s.DOUBLE ||
+				isTokenMatchs(list[i - 1], possibles) == s.LIST ||
+				isTokenMatchs(list[i - 1], possibles) == s.ARRAY ||
+				isTokenMatchs(list[i - 1], possibles) == s.CLASS ||
+				isTokenMatchs(list[i - 1], possibles) == s.VOID
+			)) {
+				list.erase(list.begin() + i);
+				--i;
+				list[i] = "/P";
+			}
+		}
+
+		prev_word = list[i];
+	}
+	for (int i = 1; i < list.size() - 1; ++i) {
+		if (list[i] == com && list[i - 1] == "/P" && list[i + 1] == "/P") {
+			list.erase(list.begin() + i + 1);
+			list.erase(list.begin() + i);
+			list[--i] = "/P";
+		}
+	}
+	
+	// datatype detection...
+	for (int i = 0; i < list.size(); ++i) {
 		vector<string> possibles = possibleMatchs(list[i], &s);
 		if (
-			isTokenMatchs(prev_word, possibles) == s.INT ||
-			isTokenMatchs(prev_word, possibles) == s.STRING ||
-			isTokenMatchs(prev_word, possibles) == s.BOOL ||
-			isTokenMatchs(prev_word, possibles) == s.POINT ||
-			isTokenMatchs(prev_word, possibles) == s.DOUBLE ||
-			isTokenMatchs(prev_word, possibles) == s.LIST ||
-			isTokenMatchs(prev_word, possibles) == s.ARRAY ||
-			isTokenMatchs(prev_word, possibles) == s.CLASS
+				isTokenMatchs(list[i], possibles) == s.INT ||
+				isTokenMatchs(list[i], possibles) == s.STRING ||
+				isTokenMatchs(list[i], possibles) == s.BOOL ||
+				isTokenMatchs(list[i], possibles) == s.POINT ||
+				isTokenMatchs(list[i], possibles) == s.DOUBLE ||
+				isTokenMatchs(list[i], possibles) == s.LIST ||
+				isTokenMatchs(list[i], possibles) == s.ARRAY ||
+				isTokenMatchs(list[i], possibles) == s.CLASS ||
+				isTokenMatchs(list[i], possibles) == s.VOID
 		) {
-			if (list[i] == "/I" && list[i + i] == com) {
-				list.erase(list.begin() + i + 1);
-				list.erase(list.begin() + i);
-				list[i - 1] = "/P";
-				--i;
-			}
+			list[i] = "/T";
 		}
-
-		prev_word = list[i];
 	}
-
+	
 	return list;
+}
+
+void interpretTokenSyntax(vector<string> list)
+{
+	for (string& i : list) {
+		// ======================================================== TODO =============================================
+	}
 }
