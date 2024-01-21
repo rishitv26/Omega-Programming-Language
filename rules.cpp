@@ -13,8 +13,7 @@ vector<string> reduceExpressions(ProgramTokens& tokens, int start, int end)
 			i == "/I" ||
 			i == "..." ||
 			i == "/P" ||
-			i == "/T" ||
-			i == "/"
+			i == "/T"
 		) {
 			;
 		}

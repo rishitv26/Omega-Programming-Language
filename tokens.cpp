@@ -227,9 +227,9 @@ ValidTokens ProgramTokens::findTokenType(string str, struct Symbols *sym)
     return ValidTokens::IDENTIFIER;
 }
 
-#define APPEND_INS(x) struct _TOKEN_TYPE token; token.set((void*)x, t, line_num); Tokens.push_back(token)
-ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
-    int line_num = 1;
+#define APPEND_INS(x) struct _TOKEN_TYPE token; token.set((void*)x, t, 0); Tokens.push_back(token)
+ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym, vector<string>& original) {
+    int line_num = 0;
     for (string& line : lines) {
         line += ' ';
         string current_line = "";
@@ -335,9 +335,21 @@ ProgramTokens::ProgramTokens(vector<string>& lines, struct Symbols* sym) {
         if (end) break;
         // terminate scentence:
         struct Others* other = new Others(sym->END_LINE);
-        ValidTokens t = ValidTokens::OTHERS;
+        ValidTokens t = ValidTokens::OTHERS;  
         APPEND_INS(other);
         // cout << endl;
+    }
+
+    // last step: finding the appropriate lines:
+    
+    int index = 0;
+    for (CToken& i : return_tokens()) {
+        string rep = i.get_raw_val();
+
+        size_t x = original[index].find(rep);
+        while (x == string::npos) { index++; }
+        
+        i.line_number = index;
     }
 }
 
@@ -350,27 +362,27 @@ void ProgramTokens::print_tokens()
     for (CToken i : return_tokens()) {
         if (i.token_t == ValidTokens::IDENTIFIER) {
             struct Identifier id = *((struct Identifier*)i.token_ptr);
-            cout << id.name << ' ' << "-> ";
+            cout << id.name << " [line: " << i.line_number << "]" << "-> ";
         }
         else if (i.token_t == ValidTokens::KEYWORD) {
             struct Keyword id = *((struct Keyword*)i.token_ptr);
-            cout << id.name << ' ' << "-> ";
+            cout << id.name << " [line: " << i.line_number << "]" << "-> ";
         }
         else if (i.token_t == ValidTokens::LITERAL) {
             struct Literal id = *((struct Literal*)i.token_ptr);
-            cout << id.name << ' ' << "-> ";
+            cout << id.name << " [line: " << i.line_number << "]" << "-> ";
         }
         else if (i.token_t == ValidTokens::OPERATION) {
             struct Operation id = *((struct Operation*)i.token_ptr);
-            cout << id.get_symbol(true) << ' ' << "-> ";
+            cout << id.get_symbol(true) << " [line: " << i.line_number << "]" << "-> ";
         }
         else if (i.token_t == ValidTokens::RESERVED) {
             struct Reserved id = *((struct Reserved*)i.token_ptr);
-            cout << id.name << ' ' << "-> ";
+            cout << id.name << " [line: " << i.line_number << "]" << "-> ";
         }
         else {
             struct Others id = *((struct Others*)i.token_ptr);
-            cout << id.name << ' ' << "-> ";
+            cout << id.name << " [line: " << i.line_number << "]" << "-> ";
         }
     }
     cout << endl;

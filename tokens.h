@@ -63,7 +63,7 @@ private:
 	ValidTokens findTokenType(string str, struct Symbols *sym);
 
 public:
-	ProgramTokens(vector<string>& lines, struct Symbols* sym);
+	ProgramTokens(vector<string>& lines, struct Symbols* sym, vector<string>& original);
 	~ProgramTokens();
 
 	vector<CToken>& return_tokens();

@@ -34,8 +34,11 @@ int main() {
     code = vect_to_str(lines, symbols.END_LINE);
 
     // preproccessor and simplification complete: start tokenising code ->
-    ProgramTokens tokens(lines, &symbols); // <- tokenises code
+    ProgramTokens tokens(lines, &symbols, original_lines); // <- tokenises code
     vector<string> reduced = reduceExpressions(tokens, 0, tokens.return_tokens().size() - 1);
+
+    cout << "TOKENS: " << endl;
+    tokens.print_tokens();
 
     // starting checks...
     interpretTokenSyntax(reduced);
